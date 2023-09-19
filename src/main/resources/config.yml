@@ -1,0 +1,10 @@
+pattern: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+
+permissions:
+  parent-permission: "VRedeem.*"
+  generate: "VRedeem.generate"
+  redeem: "VRedeem.redeem"
+
+
+
+disable-plugin-on-error: false
