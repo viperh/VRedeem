@@ -7,7 +7,7 @@ public class CodeUtil {
 
     private int index;
     private int max_usages;
-    private int usages_per_player;
+
     private String code;
     private List<String> commands = new ArrayList<>();
     private List<String> messages = new ArrayList<>();
@@ -15,15 +15,19 @@ public class CodeUtil {
 
     int actual_usages;
 
-    public CodeUtil(int index, int max_usages, int usages_per_player, String code, List<String> commands, List<String> messages, List<String> players){
+    public CodeUtil(int index, int max_usages, String code, List<String> commands, List<String> messages, List<String> players){
         this.actual_usages = 0;
         this.index = index;
         this.max_usages = max_usages;
-        this.usages_per_player = usages_per_player;
         this.code = code;
         this.commands = commands;
         this.messages = messages;
         this.players = players;
+    }
+
+    public void addUser(String username){
+        players.add(username);
+
     }
 
     public void setUsages(int new_max_usages){
@@ -42,9 +46,7 @@ public class CodeUtil {
         return max_usages;
     }
 
-    public int getUsagesPerPlayer(){
-        return usages_per_player;
-    }
+
     public String getCode(){
         return code;
     }

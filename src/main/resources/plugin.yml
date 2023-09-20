@@ -2,3 +2,8 @@ name: VRedeem
 version: '${project.version}'
 main: me.plugins.vredeem.VRedeem
 api-version: '1.19'
+commands:
+  redeem:
+    description: redeem
+  generate:
+    description: generate

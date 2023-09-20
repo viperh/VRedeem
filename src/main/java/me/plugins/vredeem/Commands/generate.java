@@ -12,6 +12,7 @@ import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Random;
 
 @SuppressWarnings("all")
 public class generate implements CommandExecutor {
@@ -46,6 +47,7 @@ public class generate implements CommandExecutor {
         if(length != -1){
             String generatedCode = VRedeem.instance.generateCode(length);
 
+
             int finalIndex = -1;
 
             for(Map.Entry<Integer, CodeUtil> entry : VRedeem.instance.utilMap.entrySet()){
@@ -59,7 +61,13 @@ public class generate implements CommandExecutor {
             sender.sendMessage(VRedeem.instance.format("&9&lThis plugin only generates the code. You will have to configure it in the config.yml file!!"));
             sender.sendMessage(VRedeem.instance.format("&6-------------------------------------------------------"));
 
-            sender.sendMessage(VRedeem.instance.format("&6lCode: &9&l" + generatedCode));
+
+            if(generatedCode.equals("")){
+                sender.sendMessage(VRedeem.instance.format("&6&lCode: &9&lCode is empty! Contact developer!"));
+            }
+            else{
+                sender.sendMessage(VRedeem.instance.format("&6&lCode: &9&l" + generatedCode));
+            }
 
             StringSelection selection = new StringSelection(generatedCode);
 
@@ -74,7 +82,10 @@ public class generate implements CommandExecutor {
 
 
 
-            CodeUtil codeUtility = new CodeUtil(finalIndex, 0, 0, generatedCode, Arrays.asList("", ""), Arrays.asList("", ""), Arrays.asList("", ""));
+            CodeUtil codeUtility = new CodeUtil(finalIndex, 0, generatedCode, Arrays.asList("", ""), Arrays.asList("", ""), Arrays.asList("", ""));
+
+            VRedeem.instance.utilMap.put(finalIndex, codeUtility);
+            VRedeem.instance.updateYML();
 
         }
         else{
@@ -89,4 +100,7 @@ public class generate implements CommandExecutor {
 
         return true;
     }
+
+
+
 }

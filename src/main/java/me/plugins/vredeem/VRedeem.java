@@ -1,5 +1,7 @@
 package me.plugins.vredeem;
 
+import me.plugins.vredeem.Commands.generate;
+import me.plugins.vredeem.Commands.redeem;
 import me.plugins.vredeem.Listeners.onJoin;
 import me.plugins.vredeem.Utils.CodeUtil;
 import org.bukkit.ChatColor;
@@ -22,14 +24,14 @@ public final class VRedeem extends JavaPlugin {
 
     public static FileConfiguration config;
 
-    private static String pattern;
+    public static String pattern;
 
     public static Map<String, String> permissionsMap = new HashMap<>();
 
 
     public static FileConfiguration database;
 
-    char[] allChars = null;
+    public static char[] allChars = null;
 
     public Map<Integer, CodeUtil> utilMap = new HashMap<>();
 
@@ -39,14 +41,11 @@ public final class VRedeem extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         instance = this;
-
         importDefaultConfig();
-
         importDatabase();
-
         getServer().getPluginManager().registerEvents(new onJoin(), this);
-
-
+        getCommand("generate").setExecutor(new generate());
+        getCommand("redeem").setExecutor(new redeem());
     }
 
     public CodeUtil getCodeUtilByCode(String code){
@@ -91,13 +90,12 @@ public final class VRedeem extends JavaPlugin {
 
             int max_usages = configSec.getInt("max-usages");
             int usages = configSec.getInt("actual-usages");
-            int usages_per_player = configSec.getInt("usages-per-playser");
             String code = configSec.getString("code");
             List<String> commands = (List<String>) database.getList("commands");
             List<String> messages = (List<String>) database.getList("messages");
             List<String> players = (List<String>) database.getList("players");
 
-            CodeUtil codeUtil = new CodeUtil(index, max_usages, usages_per_player, code, commands, messages, players);
+            CodeUtil codeUtil = new CodeUtil(index, max_usages, code, commands, messages, players);
 
             utilMap.put(index, codeUtil);
 
@@ -146,11 +144,10 @@ public final class VRedeem extends JavaPlugin {
             ConfigurationSection configSec = database.getConfigurationSection(String.valueOf(key));
 
             configSec.set("max_usages", value.getMaxUsages());
-            configSec.set("usages-per-player", value.getUsagesPerPlayer());
             configSec.set("code", value.getCode());
             configSec.set("commands", value.getCommands());
             configSec.set("messages", value.getMessages());
-            configSec.set("actual-messages", value.getActualUsages());
+            configSec.set("actual-usages", value.getActualUsages());
             configSec.set("players", value.getPlayers());
 
             try{
@@ -186,7 +183,6 @@ public final class VRedeem extends JavaPlugin {
         ConfigurationSection configSec = database.getConfigurationSection(String.valueOf(index));
 
         configSec.set("max_usages", codeUtil.getMaxUsages());
-        configSec.set("usages-per-player", codeUtil.getUsagesPerPlayer());
         configSec.set("code", codeUtil.getCode());
         configSec.set("commands", codeUtil.getCommands());
         configSec.set("messages", codeUtil.getMessages());
@@ -256,7 +252,7 @@ public final class VRedeem extends JavaPlugin {
                 getServer().getPluginManager().disablePlugin(this);
             }
             else{
-                allChars = new char[pattern.length()];
+                allChars = pattern.toCharArray();
             }
 
             ConfigurationSection configurationSection = config.getConfigurationSection("permissions");
@@ -281,26 +277,34 @@ public final class VRedeem extends JavaPlugin {
 
     }
 
-    public String format(String message){
-        return ChatColor.translateAlternateColorCodes('&', message);
-    }
-
     public String generateCode(int length){
 
         Random random = new Random();
 
-        StringBuilder finalCode = new StringBuilder();
+        String finalCode = "";
 
         for(int i = 0; i < length; i++){
-            int actualIndex = random.nextInt(pattern.length());
-            String actualLetter = allChars[actualIndex] + "";
-            finalCode.append(actualLetter);
-
+            int actualIndex = random.nextInt(allChars.length);
+            String actualLetter = String.valueOf(allChars[actualIndex]);
+            finalCode = finalCode + actualLetter;
+            // VRedeem.instance.getServer().getLogger().info("[VRedeem] - Debugging: - randomNumber: " + String.valueOf(actualIndex));
         }
 
+        if(finalCode.toString().trim().equals("")){
+            VRedeem.instance.getServer().getLogger().severe("[VRedeem] - Debugging: finalCode is empty!");
+        }
+        else{
+            VRedeem.instance.getServer().getLogger().info("[VRedeem] - Debugging: - finalCode: " + finalCode);
+        }
 
-        return finalCode.toString().trim();
+        return finalCode;
     }
+
+    public String format(String message){
+        return ChatColor.translateAlternateColorCodes('&', message);
+    }
+
+
 
     @Override
     public void onDisable() {
