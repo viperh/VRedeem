@@ -13,7 +13,10 @@ public class CodeUtil {
     private List<String> messages = new ArrayList<>();
     private List<String> players = new ArrayList<>();
 
+    int actual_usages;
+
     public CodeUtil(int index, int max_usages, int usages_per_player, String code, List<String> commands, List<String> messages, List<String> players){
+        this.actual_usages = 0;
         this.index = index;
         this.max_usages = max_usages;
         this.usages_per_player = usages_per_player;
@@ -23,6 +26,13 @@ public class CodeUtil {
         this.players = players;
     }
 
+    public void setUsages(int new_max_usages){
+        actual_usages = new_max_usages;
+    }
+
+    public int getActualUsages(){
+        return actual_usages;
+    }
 
     public int getIndex(){
         return index;

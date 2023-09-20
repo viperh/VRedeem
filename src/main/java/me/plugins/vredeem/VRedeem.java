@@ -49,6 +49,15 @@ public final class VRedeem extends JavaPlugin {
 
     }
 
+    public CodeUtil getCodeUtilByCode(String code){
+        CodeUtil returningCodeUtility = null;
+        for(Map.Entry<Integer, CodeUtil> entry : utilMap.entrySet()){
+            if(entry.getValue().getCode().equals(code)){
+                returningCodeUtility = entry.getValue();
+            }
+        }
+        return returningCodeUtility;
+    }
 
     public void importDatabase(){
         File file = new File(getDataFolder().getPath(), "database.yml");
@@ -81,6 +90,7 @@ public final class VRedeem extends JavaPlugin {
             ConfigurationSection configSec = database.getConfigurationSection(indexString);
 
             int max_usages = configSec.getInt("max-usages");
+            int usages = configSec.getInt("actual-usages");
             int usages_per_player = configSec.getInt("usages-per-playser");
             String code = configSec.getString("code");
             List<String> commands = (List<String>) database.getList("commands");
@@ -140,6 +150,7 @@ public final class VRedeem extends JavaPlugin {
             configSec.set("code", value.getCode());
             configSec.set("commands", value.getCommands());
             configSec.set("messages", value.getMessages());
+            configSec.set("actual-messages", value.getActualUsages());
             configSec.set("players", value.getPlayers());
 
             try{
@@ -158,6 +169,11 @@ public final class VRedeem extends JavaPlugin {
 
 
 
+    }
+
+    public void deleteSectionByIndex(int index){
+        utilMap.remove(index);
+        updateYML();
     }
 
     public void updatePartYaml(int index, CodeUtil codeUtil){

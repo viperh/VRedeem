@@ -1,5 +1,6 @@
 package me.plugins.vredeem.Commands;
 
+import me.plugins.vredeem.Utils.CodeUtil;
 import me.plugins.vredeem.VRedeem;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -41,7 +42,27 @@ public class redeem implements CommandExecutor {
 
         boolean playerExists = VRedeem.instance.existsPlayer(player.getName(), checkingCode);
 
-        
+        if(playerExists){
+            CodeUtil usingObject = VRedeem.instance.getCodeUtilByCode(checkingCode);
+            int actual_max_usages = usingObject.getMaxUsages();
+
+            int actual_usages = usingObject.getActualUsages();
+
+            actual_usages += 1;
+
+            usingObject.setUsages(actual_usages);
+
+            int actual_index = usingObject.getIndex();
+
+            if(actual_max_usages == actual_usages){
+                VRedeem.instance.deleteSectionByIndex(actual_index);
+            }
+
+
+
+        }
+
+
 
 
 
