@@ -1,0 +1,5 @@
+me\plugins\vredeem\VRedeem.class
+me\plugins\vredeem\Listeners\onJoin.class
+me\plugins\vredeem\Utils\CodeUtil.class
+me\plugins\vredeem\Commands\redeem.class
+me\plugins\vredeem\Commands\generate.class

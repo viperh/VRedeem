@@ -1,0 +1,9 @@
+name: VRedeem
+version: '1.0-SNAPSHOT'
+main: me.plugins.vredeem.VRedeem
+api-version: '1.19'
+commands:
+  redeem:
+    description: redeem
+  generate:
+    description: generate
