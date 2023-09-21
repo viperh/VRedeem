@@ -2,10 +2,12 @@ package me.plugins.vredeem.Commands;
 
 import me.plugins.vredeem.Utils.CodeUtil;
 import me.plugins.vredeem.VRedeem;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import java.util.List;
 
 public class redeem implements CommandExecutor {
     @Override
@@ -59,6 +61,23 @@ public class redeem implements CommandExecutor {
             VRedeem.instance.deleteSectionByIndex(actual_index);
             VRedeem.instance.getServer().getLogger().info("[VRedeem] - CodeSection deleted from config because code expired!");
         }
+
+        List<String> messages = usingObject.getMessages();
+        List<String> commands = usingObject.getCommands();
+
+        for(String run_command : commands){
+
+            run_command = run_command.replace("{player}", player.getName());
+
+            VRedeem.instance.getServer().dispatchCommand(Bukkit.getConsoleSender(), run_command);
+
+        }
+
+        for(String message : messages){
+            player.sendMessage(VRedeem.instance.format(message));
+        }
+
+
         return true;
     }
 }

@@ -17,3 +17,8 @@ commands-usages:
 
  reloadconfig: /reloadconfig default/database/all (expects string)
 
+
+
+commands placeholders:
+    
+    {player}: player's name
