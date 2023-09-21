@@ -2,6 +2,7 @@ package me.plugins.vredeem;
 
 import me.plugins.vredeem.Commands.generate;
 import me.plugins.vredeem.Commands.redeem;
+import me.plugins.vredeem.Commands.reloadconfig;
 import me.plugins.vredeem.Listeners.onJoin;
 import me.plugins.vredeem.Utils.CodeUtil;
 import org.bukkit.ChatColor;
@@ -33,7 +34,7 @@ public final class VRedeem extends JavaPlugin {
 
     public static char[] allChars = null;
 
-    public Map<Integer, CodeUtil> utilMap = new HashMap<>();
+    public Map<Integer, CodeUtil> utilMap;
 
     boolean disablePluginOnError;
 
@@ -44,8 +45,13 @@ public final class VRedeem extends JavaPlugin {
         importDefaultConfig();
         importDatabase();
         getServer().getPluginManager().registerEvents(new onJoin(), this);
+        registerCommands();
+    }
+
+    public void registerCommands(){
         getCommand("generate").setExecutor(new generate());
         getCommand("redeem").setExecutor(new redeem());
+        getCommand("reloadconfig").setExecutor(new reloadconfig());
     }
 
     public CodeUtil getCodeUtilByCode(String code){
@@ -83,6 +89,7 @@ public final class VRedeem extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
         }
 
+        utilMap = new HashMap<>();
 
         for(String indexString : database.getKeys(false)){
             int index = Integer.parseInt(indexString);
@@ -104,6 +111,22 @@ public final class VRedeem extends JavaPlugin {
         }
 
 
+
+    }
+
+    public void importConfig(){
+        config = getConfig();
+        pattern = config.getString("pattern");
+        allChars = pattern.toCharArray();
+        permissionsMap = new HashMap<>();
+
+        String parentPermission = config.getString("parent");
+        String generatePermission = config.getString("generate");
+        String redeemPermission = config.getString("redeem");
+
+        permissionsMap.put("parent", parentPermission);
+        permissionsMap.put("generate", generatePermission);
+        permissionsMap.put("redeem", redeemPermission);
 
     }
 
